@@ -73,6 +73,11 @@ func Defaults(c *koanf.Koanf) error {
 		"database.max_connections":       40,
 		"database.log_queries":           false,
 		"database.wipe_confirm":          false,
+
+		// Rutter Settings
+		"rutter.client_id":     "166933f9-414b-4f8d-aa65-c89618a3ae95",
+		"rutter.client_secret": "sandbox_sk_33619bcb-daca-4b16-b87a-991944cb538e",
+		"rutter.api_url":       "https://sandbox.rutterapi.com",
 	}, "."), nil)
 }
 

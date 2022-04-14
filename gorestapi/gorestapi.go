@@ -3,6 +3,7 @@ package gorestapi
 import (
 	"context"
 
+	"github.com/snowzach/gorestapi/rutter"
 	"github.com/snowzach/queryp"
 )
 
@@ -17,6 +18,5 @@ type GRStore interface {
 	WidgetSave(ctx context.Context, thing *Widget) error
 	WidgetDeleteByID(ctx context.Context, id string) error
 	WidgetsFind(ctx context.Context, qp *queryp.QueryParameters) ([]*Widget, int64, error)
-
-	ExchangeTokenSave(ctx context.Context, authCode string)
+	SaveRutterAccessToken(ctx context.Context, accessToken *rutter.RutterAccessToken, sellerId string) error
 }

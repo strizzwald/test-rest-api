@@ -8,7 +8,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/knadh/koanf"
+	"github.com/snowzach/gorestapi/conf"
 	"go.uber.org/zap"
 )
 
@@ -31,10 +31,22 @@ type rutterError struct {
 	ErrorMessage string `json:"error_message"`
 }
 
-func New(config *koanf.Koanf) (*RutterService, error) {
-	clientId := config.String("rutter.client_id")
-	clientSecret := config.String("rutter.client_secret")
-	apiUrl := config.String("rutter.api_url")
+type RutterAccessToken struct {
+	AccessToken     string `json:"access_token"`
+	ConnectionId    string `json:"connection_id"`
+	RequestId       string `json:"request_id"`
+	IsReady         bool   `json:"is_ready"`
+	StoreUniqueName string `json:"store_unique_name"`
+	StoreUniqueId   string `json:"store_unique_id"`
+	StoreDomain     string `json:"store_domain"`
+	Platform        string `json:"platform"`
+}
+
+func New() (*RutterService, error) {
+
+	clientId := conf.C.String("rutter.client_id")
+	clientSecret := conf.C.String("rutter.client_secret")
+	apiUrl := conf.C.String("rutter.api_url")
 
 	if len(clientId) == 0 {
 		return nil, fmt.Errorf("client_id is required")
@@ -51,7 +63,7 @@ func New(config *koanf.Koanf) (*RutterService, error) {
 	return &RutterService{clientId, clientSecret, apiUrl, zap.S().With("package", "rutter")}, nil
 }
 
-func (r *RutterService) GetAccesToken(ctx context.Context, authCode string) error {
+func (r *RutterService) GetAccesToken(ctx context.Context, authCode string) (*RutterAccessToken, error) {
 	request := exchangeTokenRequest{
 		ClientId:    r.clientId,
 		Secret:      r.clientSecret,
@@ -62,21 +74,24 @@ func (r *RutterService) GetAccesToken(ctx context.Context, authCode string) erro
 
 	body := bytes.NewBuffer(serialized)
 
-	req, _ := http.NewRequestWithContext(ctx, "POST", r.apiUrl, body)
+	req, _ := http.NewRequestWithContext(ctx, "POST", r.apiUrl+"/item/public_token/exchange", body)
 	client := http.DefaultClient
 
 	resp, err := client.Do(req)
+	b, _ := ioutil.ReadAll(resp.Body)
 
 	if err != nil {
 		var re rutterError
-		body, _ := ioutil.ReadAll(resp.Body)
 
-		json.Unmarshal(body, &re)
+		json.Unmarshal(b, &re)
 		r.logger.Error("Failed to fetch access token. %s", re.ErrorMessage)
-		return fmt.Errorf("Failed to fetch access token. %s", re.ErrorMessage)
+		return nil, fmt.Errorf("Failed to fetch access token. %s", re.ErrorMessage)
 	}
 
 	defer resp.Body.Close()
 
-	return nil
+	var accessToken RutterAccessToken
+	json.Unmarshal(b, &accessToken)
+
+	return &accessToken, nil
 }

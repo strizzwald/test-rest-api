@@ -58,8 +58,8 @@ func Defaults(c *koanf.Koanf) error {
 
 		// Database Settings
 		"database.username":              "postgres",
-		"database.password":              "password",
-		"database.host":                  "postgres",
+		"database.password":              "postgres",
+		"database.host":                  "localhost",
 		"database.port":                  5432,
 		"database.database":              "gorestapi",
 		"database.auto_create":           true,

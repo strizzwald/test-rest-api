@@ -11,6 +11,8 @@ import (
 //go:embed postgres_migrations
 var postgresMigrations embed.FS
 
+// TODO: Implement rutter.Connection migration.
+
 func MigrationSource() (source.Driver, error) {
 	return iofs.New(postgresMigrations, "postgres_migrations")
 }

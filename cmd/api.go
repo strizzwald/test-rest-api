@@ -29,6 +29,7 @@ var (
 				logger.Fatalw("Could not get database migrations", "error", err)
 			}
 
+			// TODO: Switch to GORM.
 			// Database
 			pg, err := postgres.New(conf.C, migrationSource)
 			if err != nil {

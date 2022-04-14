@@ -1,4 +1,4 @@
-package mainrpc
+package mainrpc //TODO: Rename package to api
 
 import (
 	"github.com/go-chi/chi"

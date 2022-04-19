@@ -18,6 +18,48 @@
     "host": "localhost:8080",
     "basePath": "/api/v1",
     "paths": {
+        "/exchange-token/{sellerId}": {
+            "post": {
+                "description": "Exchanges authorization code for access token.",
+                "tags": [
+                    "Exchange Token"
+                ],
+                "summary": "Exchanges authorization code for access token.",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Seller Id",
+                        "name": "sellerId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Authorization Code",
+                        "name": "authCode",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    },
+                    "400": {
+                        "description": "Invalid Argument",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/server.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/things": {
             "get": {
                 "description": "Find things",
@@ -414,23 +456,18 @@
             "type": "object",
             "properties": {
                 "created": {
-                    "description": "Created Timestamp",
                     "type": "string"
                 },
                 "description": {
-                    "description": "Description",
                     "type": "string"
                 },
                 "id": {
-                    "description": "ID (Auto-Generated)",
                     "type": "string"
                 },
                 "name": {
-                    "description": "Name",
                     "type": "string"
                 },
                 "updated": {
-                    "description": "Updated Timestamp",
                     "type": "string"
                 }
             }

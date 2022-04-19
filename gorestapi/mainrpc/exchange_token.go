@@ -4,7 +4,6 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/go-chi/chi"
 	"github.com/snowzach/gorestapi/rutter"
 	"github.com/snowzach/gorestapi/server"
 )
@@ -18,9 +17,10 @@ import (
 // @Success 200
 // @Failure 400 {object} server.ErrResponse "Invalid Argument"
 // @Failure 500 {object} server.ErrResponse "Internal Server Error"
+// @Router /exchange-token/{sellerId} [post]
 func (s *Server) ExchangeTokenSave() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		authCode := chi.URLParam(r, "authCode")
+		authCode := r.URL.Query().Get("authCode")
 		service, err := rutter.New()
 
 		if err != nil {
@@ -33,5 +33,6 @@ func (s *Server) ExchangeTokenSave() http.HandlerFunc {
 			server.RenderErrInvalidRequest(w, err)
 		}
 
+		server.RenderJSON(w, 200, map[string]interface{}{"accessToken": accessToken})
 	}
 }

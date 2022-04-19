@@ -33,6 +33,8 @@ func Setup(router chi.Router, grStore gorestapi.GRStore) error {
 		r.Get("/widgets/{id}", s.WidgetGetByID())
 		r.Delete("/widgets/{id}", s.WidgetDeleteByID())
 		r.Get("/widgets", s.WidgetsFind())
+
+		r.Post("/exchange-token/{id}", s.ExchangeTokenSave())
 	})
 
 	return nil

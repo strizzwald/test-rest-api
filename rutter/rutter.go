@@ -75,17 +75,23 @@ func (r *RutterService) GetAccesToken(ctx context.Context, authCode string) (*Ru
 	body := bytes.NewBuffer(serialized)
 
 	req, _ := http.NewRequestWithContext(ctx, "POST", r.apiUrl+"/item/public_token/exchange", body)
+	req.Header.Add("Content-Type", "application/json")
 	client := http.DefaultClient
 
 	resp, err := client.Do(req)
 	b, _ := ioutil.ReadAll(resp.Body)
 
-	if err != nil {
+	if resp.StatusCode != 200 {
 		var re rutterError
 
 		json.Unmarshal(b, &re)
 		r.logger.Error("Failed to fetch access token. %s", re.ErrorMessage)
 		return nil, fmt.Errorf("Failed to fetch access token. %s", re.ErrorMessage)
+	}
+
+	if err != nil {
+		r.logger.Error("Failed to fetch access token. %s", err.Error())
+		return nil, fmt.Errorf("Failed to fetch access token. %s", err.Error())
 	}
 
 	defer resp.Body.Close()

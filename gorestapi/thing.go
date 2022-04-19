@@ -7,16 +7,11 @@ import (
 
 // Thing
 type Thing struct {
-	// ID (Auto-Generated)
-	ID string `json:"id"`
-	// Created Timestamp
-	Created time.Time `json:"created,omitempty"`
-	// Updated Timestamp
-	Updated time.Time `json:"updated,omitempty"`
-	// Name
-	Name string `json:"name"`
-	// Description
-	Description string `json:"description"`
+	ID          string    `json:"id"`
+	Created     time.Time `json:"created,omitempty"`
+	Updated     time.Time `json:"updated,omitempty"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
 }
 
 // ThingExample
